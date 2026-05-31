@@ -3,23 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5000",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start -p 5000",
+    "lint": "eslint",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.0",
+    "@tanstack/react-query": "^5.100.14",
+    "graphql": "^16.14.0",
+    "graphql-request": "^7.4.0",
+    "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^7.1.1",
+    "@graphql-codegen/client-preset": "^6.0.1",
+    "@graphql-codegen/typescript": "^6.0.2",
+    "@graphql-codegen/typescript-operations": "^6.0.3",
+    "@graphql-codegen/typescript-react-apollo": "^4.4.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "graphql-tag": "^2.12.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
