@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
 import Header from './Header';
@@ -8,13 +8,14 @@ import MainContent from './MainContent';
 import WelcomeMessage from './WelcomeMessage';
 import { ThreadSelector } from './ThreadSelector';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useAutoScroll } from '../hooks/useAutoScroll';
 import { Message, DEFAULT_MESSAGES } from '../constants/chat.constants';
 import { useAIChat } from '../hooks/useAIChat';
 
 export default function ChatContainer() {
   const [messages, setMessages] = useLocalStorage<Message[]>('fishChatMessages', DEFAULT_MESSAGES);
   const [isThinking, setIsThinking] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useAutoScroll(messages);
   const {
     addMessage,
     threads,
@@ -45,11 +46,6 @@ export default function ChatContainer() {
 
     loadHistory();
   }, [currentThreadId, switchThread, setMessages]);
-
-  // Auto-scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   const handleSendMessage = async (message: string) => {
     const newUserMessage = {
@@ -95,7 +91,7 @@ export default function ChatContainer() {
         onCreateNewThread={createNewThread}
       />
       
-      <MainContent>
+      <MainContent ref={mainContentRef}>
         <WelcomeMessage />
         
         <div className="space-y-4 mb-8">
@@ -115,7 +111,6 @@ export default function ChatContainer() {
               isThinking={true}
             />
           )}
-          <div ref={messagesEndRef} />
         </div>
       </MainContent>
       

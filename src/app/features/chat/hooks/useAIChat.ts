@@ -1,15 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
-import { sendMessage } from '../services/graphqlQueries';
+import { useMutation } from '@apollo/client/react';
+import { SendMessageDocument, SendMessageMutation, SendMessageMutationVariables } from '@/graphql/generated/graphql';
 import { useThreads } from './useThreads';
 
 export function useAIChat(userId: string = 'anonymous') {
-  const {
-    mutateAsync: sendChatMessage,
-    isPending: isSending,
-    error: sendError,
-  } = useMutation<string, Error, { message: string; userId: string }>({
-    mutationFn: ({ message, userId }) => sendMessage(message, userId),
-  });
+  const [sendMessageMutation, { loading: isSending, error: sendError }] = useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument);
 
   const {
     threads,
@@ -20,8 +17,10 @@ export function useAIChat(userId: string = 'anonymous') {
   } = useThreads(userId);
 
   const addMessage = async (prompt: string): Promise<string> => {
-    const response = await sendChatMessage({ message: prompt, userId });
-    return response;
+    const result = await sendMessageMutation({
+      variables: { message: prompt, userId },
+    });
+    return result.data?.sendMessage || '';
   };
 
   return {

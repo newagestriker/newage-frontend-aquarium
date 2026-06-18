@@ -1,15 +1,19 @@
-import { graphqlRequest } from './graphqlClient';
+import { gql, useMutation, useApolloClient } from '@apollo/client';
+import { SendMessageDocument, SendMessageMutation, SendMessageMutationVariables } from '@/graphql/generated/graphql';
 
-export const sendMessage = async (message: string, userId: string): Promise<string> => {
-  const response = await graphqlRequest<{ sendMessage: string }>(
-    `
-      mutation SendMessage($message: String!, $userId: String!) {
-        sendMessage(message: $message, userId: $userId)
-      }
-    `,
-    { message, userId },
-  );
-  return response.sendMessage;
-};
+export { SendMessageDocument };
+
+export function useSendMessage() {
+  const [sendMessageMutation, { loading, error }] = useMutation<
+    SendMessageMutation,
+    SendMessageMutationVariables
+  >(SendMessageDocument);
+
+  return {
+    sendMessage: sendMessageMutation,
+    loading,
+    error,
+  };
+}
 
 
